@@ -20,11 +20,7 @@ import net.minecraft.world.item.component.DyedItemColor;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Owns a collection of {@link RedstoneLinkChannel}s and brokers
@@ -231,7 +227,7 @@ public final class RedstoneLinkChannelHost {
     }
 
     public void onUnload() {
-        for (RedstoneLinkChannel channel : channels.values()) {
+        for (RedstoneLinkChannel channel : List.copyOf(channels.values())) {
             channel.unregister();
         }
         registeredLevel = null;
@@ -246,7 +242,7 @@ public final class RedstoneLinkChannelHost {
     public void migrateIfNeeded() {
         Level level = owner.level();
         if (level == registeredLevel) return;
-        for (RedstoneLinkChannel channel : channels.values()) {
+        for (RedstoneLinkChannel channel : List.copyOf(channels.values())) {
             channel.unregister();
             if (level != null && !level.isClientSide) {
                 channel.register(level);
